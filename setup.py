@@ -13,12 +13,12 @@ setup(
     author_email = 'dfdeshom@gmail.com',
     packages=find_packages(exclude=['ez_setup']),
     classifiers = [
-    'Development Status :: 5 - Production/Stable',
+    'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: BSD License',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
-    'Topic :: Internet :: WWW/HTTP :: Indexing/Search'
+    'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     url = 'http://bitbucket.org/dfdeshom/sfpy/overview/'
     )
