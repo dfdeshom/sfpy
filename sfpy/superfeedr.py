@@ -2,15 +2,15 @@ import time
 import xmpp
 from xmpp.protocol import Iq
 import xml.etree.ElementTree as ET
-
+SF_HOST = "superfeedr.com"
 # import logging
 # log = logging.getLogger("superfeedr")
 # log.debug('starting SuperFeedr')
 
 class SuperFeedr(object):
     def __init__(self,jid,password):
-        self.client = xmpp.Client(server='superfeedr.com')
-        self.client.connect(server=('superfeedr.com',5222))
+        self.client = xmpp.Client(server=SF_HOST)
+        self.client.connect(server=(SF_HOST,5222))
         self.jid = jid
         name = xmpp.protocol.JID(jid)
         self.client.auth(name.getNode(), password)
@@ -21,7 +21,7 @@ class SuperFeedr(object):
         return
 
     def subscribe(self,feed):
-        data = Iq(typ='set',to="firehoser.superfeedr.com",frm=self.jid)
+        data = Iq(typ='set',to=SF_HOST,frm=self.jid)
         child = data.addChild('pubsub',namespace='http://jabber.org/protocol/pubsub')
         child.addChild('subscribe', {'node': feed, 'jid': self.jid})
         self.client.send(data)
@@ -30,7 +30,7 @@ class SuperFeedr(object):
         return 1
 
     def unsubscribe(self,feed):
-        data = Iq(typ='set',to="firehoser.superfeedr.com",frm=self.jid)
+        data = Iq(typ='set',to=SF_HOST,frm=self.jid)
         child = data.addChild('pubsub',namespace='http://jabber.org/protocol/pubsub')
         child.addChild('unsubscribe', {'node': feed, 'jid': self.jid})
         self.client.send(data)
