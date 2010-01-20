@@ -9,7 +9,7 @@ SF_HOST = "superfeedr.com"
 
 class SuperFeedr(object):
     def __init__(self,jid,password):
-        self.client = xmpp.Client(server=SF_HOST)
+        self.client = xmpp.Client(server=SF_HOST,debug=[])
         self.client.connect(server=(SF_HOST,5222))
         self.jid = jid
         name = xmpp.protocol.JID(jid)

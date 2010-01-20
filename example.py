@@ -6,8 +6,8 @@ def sf_message(event):
 
         
 def main():
-    user = 'user'
-    password = 'password'
+    user = 'cogtree@superfeedr'
+    password = '1apple@philly'
     s = SuperFeedr(user, password)
     s.on_notification(sf_message)
     s.monitor() 
