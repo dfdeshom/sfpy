@@ -3,13 +3,13 @@ import xmpp
 from xmpp.protocol import Iq
 import xml.etree.ElementTree as ET
 SF_HOST = "superfeedr.com"
-# import logging
-# log = logging.getLogger("superfeedr")
-# log.debug('starting SuperFeedr')
 
 class SuperFeedr(object):
-    def __init__(self,jid,password):
-        self.client = xmpp.Client(server=SF_HOST,debug=[])
+    def __init__(self,jid,password,debug=False):
+        if debug:
+            self.client = xmpp.Client(server=SF_HOST)
+        else:
+            self.client = xmpp.Client(server=SF_HOST,debug=[])
         self.client.connect(server=(SF_HOST,5222))
         self.jid = jid
         name = xmpp.protocol.JID(jid)
