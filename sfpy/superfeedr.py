@@ -2,15 +2,14 @@ import time
 import xmpp
 from xmpp.protocol import Iq
 import xml.etree.ElementTree as ET
-SF_HOST = "superfeedr.com"
 
 class SuperFeedr(object):
-    def __init__(self,jid,password,debug=False):
+    def __init__(self,jid,password,debug=False, hostname='superfeedr.com'):
         if debug:
-            self.client = xmpp.Client(server=SF_HOST)
+            self.client = xmpp.Client(server=self.hostname)
         else:
-            self.client = xmpp.Client(server=SF_HOST,debug=[])
-        self.client.connect(server=(SF_HOST,5222))
+            self.client = xmpp.Client(server=self.hostname,debug=[])
+        self.client.connect(server=(self.hostname,5222))
         self.jid = jid
         name = xmpp.protocol.JID(jid)
         self.client.auth(name.getNode(), password)
@@ -18,10 +17,12 @@ class SuperFeedr(object):
         
         self.client.RegisterHandler('message',self.superfeedr_msg)
         self.func = str
+        
+        self.hostname = hostname
         return
 
     def subscribe(self,feed):
-        data = Iq(typ='set',to=SF_HOST,frm=self.jid)
+        data = Iq(typ='set',to=self.hostname,frm=self.jid)
         child = data.addChild('pubsub',namespace='http://jabber.org/protocol/pubsub')
         child.addChild('subscribe', {'node': feed, 'jid': self.jid})
         self.client.send(data)
@@ -30,7 +31,7 @@ class SuperFeedr(object):
         return 1
 
     def unsubscribe(self,feed):
-        data = Iq(typ='set',to=SF_HOST,frm=self.jid)
+        data = Iq(typ='set',to=self.hostname,frm=self.jid)
         child = data.addChild('pubsub',namespace='http://jabber.org/protocol/pubsub')
         child.addChild('unsubscribe', {'node': feed, 'jid': self.jid})
         self.client.send(data)
