@@ -18,32 +18,28 @@ class SuperFeedr(object):
         self.client.auth(xmpp.protocol.JID(jid).getNode(), password)
         self.client.sendInitPresence()
         
-        self.client.RegisterHandler('message',self.superfeedr_msg)
+        self.client.RegisterHandler('message', self.superfeedr_msg)
         self.callback = lambda x: x
 
-    def subscribe(self, feed, hostname=None, sleep_time=1):
+    def _action(self, action, feed, hostname=None, sleep_time=1):
         if not hostname:
             hostname = 'firehoser.superfeedr.com'
         data = Iq(typ='set', to=hostname, frm=str(self.jid))
         child = data.addChild('pubsub',
             namespace='http://jabber.org/protocol/pubsub')
-        child.addChild('subscribe', {'node': feed, 'jid': str(self.jid)})
+        child.addChild(action, {'node': feed, 'jid': str(self.jid)})
         self.client.send(data)
         if sleep_time:
             time.sleep(sleep_time)
         self.client.Process(1)
 
+    def subscribe(self, feed, hostname=None, sleep_time=1):
+        self._action('subscribe', feed, hostname=hostname,
+            sleep_time=sleep_time)
+
     def unsubscribe(self, feed, hostname=None, sleep_time=1):
-        if not hostname:
-            hostname = 'firehoser.superfeedr.com'
-        data = Iq(typ='set', to=hostname, frm=str(self.jid))
-        child = data.addChild('pubsub',
-            namespace='http://jabber.org/protocol/pubsub')
-        child.addChild('unsubscribe', {'node': feed, 'jid': str(self.jid)})
-        self.client.send(data)
-        if sleep_time:
-            time.sleep(sleep_time)
-        self.client.Process(1)
+        self._action('unsubscribe', feed, hostname=hostname,
+            sleep_time=sleep_time)
     
     def monitor(self):
         while True:
