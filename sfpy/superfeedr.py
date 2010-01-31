@@ -4,7 +4,10 @@ from xmpp.protocol import Iq
 import xml.etree.ElementTree as ET
 
 class SuperFeedr(object):
-    def __init__(self, jid, password, debug=False, hostname='superfeedr.com'):
+    def __init__(self, jid, password, debug=False, hostname=None):
+        if not hostname:
+            hostname = 'superfeedr.com'
+        self.hostname = hostname
         if debug:
             kwargs = {}
         else:
@@ -17,8 +20,6 @@ class SuperFeedr(object):
         
         self.client.RegisterHandler('message',self.superfeedr_msg)
         self.callback = lambda x: x
-        
-        self.hostname = hostname
 
     def subscribe(self, feed, hostname=None, sleep_time=1):
         if not hostname:
