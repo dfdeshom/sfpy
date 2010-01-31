@@ -24,10 +24,10 @@ class SuperFeedr(object):
     def subscribe(self, feed, hostname=None, sleep_time=1):
         if not hostname:
             hostname = 'firehoser.superfeedr.com'
-        data = Iq(typ='set', to=hostname, frm=self.jid)
+        data = Iq(typ='set', to=hostname, frm=str(self.jid))
         child = data.addChild('pubsub',
             namespace='http://jabber.org/protocol/pubsub')
-        child.addChild('subscribe', {'node': feed, 'jid': self.jid})
+        child.addChild('subscribe', {'node': feed, 'jid': str(self.jid)})
         self.client.send(data)
         if sleep_time:
             time.sleep(sleep_time)
@@ -36,10 +36,10 @@ class SuperFeedr(object):
     def unsubscribe(self, feed, hostname=None, sleep_time=1):
         if not hostname:
             hostname = 'firehoser.superfeedr.com'
-        data = Iq(typ='set', to=hostname, frm=self.jid)
+        data = Iq(typ='set', to=hostname, frm=str(self.jid))
         child = data.addChild('pubsub',
             namespace='http://jabber.org/protocol/pubsub')
-        child.addChild('unsubscribe', {'node': feed, 'jid': self.jid})
+        child.addChild('unsubscribe', {'node': feed, 'jid': str(self.jid)})
         self.client.send(data)
         if sleep_time:
             time.sleep(sleep_time)
