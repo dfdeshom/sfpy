@@ -17,6 +17,8 @@ class SuperFeedr(object):
         self.jid = jid
         self.client.auth(xmpp.protocol.JID(jid).getNode(), password)
         self.client.sendInitPresence()
+        # give this client the greatest priority
+        self.client.send(xmpp.protocol.Presence(priority='127'))
         
         self.client.RegisterHandler('message', self.superfeedr_msg)
         self.callback = lambda x: x
@@ -54,7 +56,7 @@ class SuperFeedr(object):
         httpx = xml.find('{http://jabber.org/protocol/pubsub#event}event/{http://superfeedr.com/xmpp-pubsub-ext}status/{http://superfeedr.com/xmpp-pubsub-ext}http')
         next_fetchx = xml.find('{http://jabber.org/protocol/pubsub#event}event/{http://superfeedr.com/xmpp-pubsub-ext}status/{http://superfeedr.com/xmpp-pubsub-ext}next_fetch')
         itemsx = xml.find('{http://jabber.org/protocol/pubsub#event}event/{http://jabber.org/protocol/pubsub#event}items')
-        entriesx = xml.findall('{http://jabber.org/protocol/pubsub#event}event/{http://jabber.org/protocol/pubsub#event}items/{http://jabber.org/protocol/pubsub#event}item/{http://www.w3.org/2005/Atom}entry')
+        entriesx = xml.findall('{http://jabber.org/protocol/pubsub#event}event/{http://jabber.org/protocol/pubsub#event}items/{http://jabber.org/protocol/pubsub}item/{http://www.w3.org/2005/Atom}entry')
         if None not in (statusx, httpx, next_fetchx, itemsx, entriesx):
             event.update({
                 'xml': xml,
@@ -63,6 +65,7 @@ class SuperFeedr(object):
                 'next_fetch': next_fetchx.text,
                 'entries': [],
             })
+            
             for entryx in entriesx:
                 entry = {
                     'title': '',
@@ -76,22 +79,22 @@ class SuperFeedr(object):
                 linkx = entryx.find('{http://www.w3.org/2005/Atom}link')
                 idx = entryx.find('{http://www.w3.org/2005/Atom}id')
                 publishedx = entryx.find('{http://www.w3.org/2005/Atom}published')
-                if titlex:
+                if titlex is not None:
                     entry['title'] = titlex.text
-                    if summaryx:
+                    if summaryx is not None:
                         entry['summary'] = summaryx.text
-                    if linkx:
+                    if linkx is not None:
                         entry['link'] = (
                             linkx.get('rel'),
                             linkx.get('type'),
                             linkx.get('href'),
                         )
-                    if idx:
+                    if idx is not None:
                         entry['id'] = idx.text
-                    if publishedx:
+                    if publishedx is not None:
                         entry['published'] = publishedx.text
                     event['entries'].append(entry)
-	        
+	
         return self.callback(event)
     
     def on_notification(self, callback):
