@@ -1,4 +1,4 @@
-from sfpy.superfeedr import SuperFeedr
+from sfpy import SuperFeedr
 
 def sf_message(event):
     print 'received this event: ', str(event)
