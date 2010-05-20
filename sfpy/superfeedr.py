@@ -34,7 +34,8 @@ class SuperFeedr(object):
         if sleep_time:
             time.sleep(sleep_time)
         self.client.Process(1)
-
+        self.client.disconnect()
+        
     def subscribe(self, feed, hostname=None, sleep_time=1):
         self._action('subscribe', feed, hostname=hostname,
             sleep_time=sleep_time)
