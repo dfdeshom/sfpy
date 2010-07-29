@@ -95,8 +95,9 @@ class SuperFeedr(object):
                     
                 event['entries'].append(entry)
 	
-        return self.callback(event)
+        return self.callback(event,*self.args,**self.kwargs)
     
-    def on_notification(self, callback):
+    def on_notification(self,callback,*args,**kwargs):
         self.callback = callback
-	
+	self.args = args
+        self.kwargs = kwargs
