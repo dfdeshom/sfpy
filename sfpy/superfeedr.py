@@ -69,26 +69,29 @@ class SuperFeedr(object):
             })
             
             for entryx in entriesx:
-                entry = {}
-                titlex = entryx.find('{http://www.w3.org/2005/Atom}title')
-                summaryx = entryx.find('{http://www.w3.org/2005/Atom}summary')
-                linkx = entryx.find('{http://www.w3.org/2005/Atom}link')
-                idx = entryx.find('{http://www.w3.org/2005/Atom}id')
-                publishedx = entryx.find('{http://www.w3.org/2005/Atom}published')
-                authorx = entryx.find('{http://www.w3.org/2005/Atom}author/{http://www.w3.org/2005/Atom}name')
+                entry = {'title':'','summary':'','link':'','id':'','published':'','author':'','full_content':''}
+                title = entryx.find('{http://www.w3.org/2005/Atom}title') 
+                summary = entryx.find('{http://www.w3.org/2005/Atom}summary')
+                link = entryx.find('{http://www.w3.org/2005/Atom}link')
+                id = entryx.find('{http://www.w3.org/2005/Atom}id')
+                published = entryx.find('{http://www.w3.org/2005/Atom}published')
+                author = entryx.find('{http://www.w3.org/2005/Atom}author/{http://www.w3.org/2005/Atom}name')
+                content = entryx.find('{http://www.w3.org/2005/Atom}content')
                 
-                if titlex is not None:
-                    entry['title'] = titlex.text
-                if summaryx is not None:
-                    entry['summary'] = summaryx.text
-                if linkx is not None:
-                    entry['link'] = linkx.get('href')
-                if idx is not None:
-                    entry['id'] = idx.text
-                if publishedx is not None:
-                    entry['published'] = publishedx.text
-                if authorx is not None:
-                    entry['author'] = authorx.text
+                if title is not None:
+                    entry['title'] = title.text 
+                if summary is not None:
+                    entry['summary'] = summary.text
+                if link is not None:
+                    entry['link'] = link.get('href')
+                if id is not None:
+                    entry['id'] = id.text
+                if published is not None:
+                    entry['published'] = published.text
+                if author is not None:
+                    entry['author'] = author.text
+                if content is not None:
+                    entry['full_content'] = content.text
                     
                 event['entries'].append(entry)
 	
