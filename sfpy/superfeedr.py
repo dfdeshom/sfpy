@@ -58,6 +58,7 @@ class SuperFeedr(object):
         next_fetchx = xml.find('{http://jabber.org/protocol/pubsub#event}event/{http://superfeedr.com/xmpp-pubsub-ext}status/{http://superfeedr.com/xmpp-pubsub-ext}next_fetch')
         itemsx = xml.find('{http://jabber.org/protocol/pubsub#event}event/{http://jabber.org/protocol/pubsub#event}items')
         entriesx = xml.findall('{http://jabber.org/protocol/pubsub#event}event/{http://jabber.org/protocol/pubsub#event}items/{http://jabber.org/protocol/pubsub}item/{http://www.w3.org/2005/Atom}entry')
+
         if None not in (statusx, httpx, next_fetchx, itemsx, entriesx):
             event.update({
                 'xml': xml,
@@ -68,33 +69,28 @@ class SuperFeedr(object):
             })
             
             for entryx in entriesx:
-                entry = {
-                    'title': '',
-                    'summary': '',
-                    'link': ('', '', ''),
-                    'id': '',
-                    'published': '',
-                }
+                entry = {}
                 titlex = entryx.find('{http://www.w3.org/2005/Atom}title')
                 summaryx = entryx.find('{http://www.w3.org/2005/Atom}summary')
                 linkx = entryx.find('{http://www.w3.org/2005/Atom}link')
                 idx = entryx.find('{http://www.w3.org/2005/Atom}id')
                 publishedx = entryx.find('{http://www.w3.org/2005/Atom}published')
+                authorx = entryx.find('{http://www.w3.org/2005/Atom}author/{http://www.w3.org/2005/Atom}name')
+                
                 if titlex is not None:
                     entry['title'] = titlex.text
-                    if summaryx is not None:
-                        entry['summary'] = summaryx.text
-                    if linkx is not None:
-                        entry['link'] = (
-                            linkx.get('rel'),
-                            linkx.get('type'),
-                            linkx.get('href'),
-                        )
-                    if idx is not None:
-                        entry['id'] = idx.text
-                    if publishedx is not None:
-                        entry['published'] = publishedx.text
-                    event['entries'].append(entry)
+                if summaryx is not None:
+                    entry['summary'] = summaryx.text
+                if linkx is not None:
+                    entry['link'] = linkx.get('href')
+                if idx is not None:
+                    entry['id'] = idx.text
+                if publishedx is not None:
+                    entry['published'] = publishedx.text
+                if authorx is not None:
+                    entry['author'] = authorx.text
+                    
+                event['entries'].append(entry)
 	
         return self.callback(event)
     
